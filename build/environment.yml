@@ -36,7 +36,3 @@ dependencies:
     - pysha3==1.0.2
     - python-bitcoinlib==0.10.2
     - pyyaml==5.4.1
-
-# apt:
-#  - sudo apt install texlive-latex-base
-#  - sudo apt install texlive-latex-extra

@@ -44,14 +44,20 @@ manubot process \
 # Make output directory
 mkdir -p output
 
+ls -l content
+
 # Create HTML output
 # https://pandoc.org/MANUAL.html
 echo >&2 "Exporting HTML manuscript"
-pandoc --verbose \
+pandoc \
+  --verbose \
   --data-dir="$PANDOC_DATA_DIR" \
+  --lua-filter ${LUA_DIR}/include-files/include-files.lua \
+  --lua-filter ${LUA_DIR}/short-captions/short-captions.lua \
+  --lua-filter ${LUA_DIR}/table-short-captions/table-short-captions.lua \
   --defaults=common.yaml \
   --defaults=html.yaml \
-	--resource-path=${RESOURCE_PATH}
+	--resource-path=${RESOURCE_PATH} \
 
 # Create PDF output (unless BUILD_PDF environment variable equals "false")
 # If Docker is not available, use WeasyPrint to create PDF
