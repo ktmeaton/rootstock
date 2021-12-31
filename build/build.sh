@@ -17,7 +17,7 @@ DOCKER_RUNNING="$(docker info &> /dev/null && echo "true" || (true && echo "fals
 
 # Set option defaults
 CI="${CI:-false}"
-BUILD_PDF="${BUILD_PDF:-true}"
+BUILD_PDF="${BUILD_PDF:-false}"
 BUILD_DOCX="${BUILD_DOCX:-false}"
 BUILD_LATEX="${BUILD_LATEX:-false}"
 SPELLCHECK="${SPELLCHECK:-false}"
@@ -25,6 +25,12 @@ MANUBOT_USE_DOCKER="${MANUBOT_USE_DOCKER:-$DOCKER_RUNNING}"
 # Pandoc's configuration is specified via files of option defaults
 # located in the $PANDOC_DATA_DIR/defaults directory.
 PANDOC_DATA_DIR="${PANDOC_DATA_DIR:-build/pandoc}"
+
+RESOURCE_PATH=".:content"
+
+if [[ ! -z ${RESOURCE_DIR+x} ]]; then
+   RESOURCE_PATH=$RESOURCE_PATH":"$RESOURCE_DIR
+fi
 
 # Generate reference information
 echo >&2 "Retrieving and processing reference metadata"
@@ -44,7 +50,8 @@ echo >&2 "Exporting HTML manuscript"
 pandoc --verbose \
   --data-dir="$PANDOC_DATA_DIR" \
   --defaults=common.yaml \
-  --defaults=html.yaml
+  --defaults=html.yaml \
+	--resource-path=${RESOURCE_PATH}
 
 # Create PDF output (unless BUILD_PDF environment variable equals "false")
 # If Docker is not available, use WeasyPrint to create PDF
@@ -56,7 +63,8 @@ if [ "${BUILD_PDF}" != "false" ] && [ "${MANUBOT_USE_DOCKER}" != "true" ]; then
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
     --defaults=html.yaml \
-    --defaults=pdf-weasyprint.yaml
+    --defaults=pdf-weasyprint.yaml \
+	  --resource-path=${RESOURCE_PATH}    
   rm images
 fi
 
@@ -90,7 +98,8 @@ if [ "${BUILD_DOCX}" = "true" ]; then
   pandoc --verbose \
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
-    --defaults=docx.yaml
+    --defaults=docx.yaml \
+	  --resource-path=${RESOURCE_PATH}     
 fi
 
 # Create LaTeX output (if BUILD_LATEX environment variable equals "true")
@@ -99,7 +108,8 @@ if [ "${BUILD_LATEX}" = "true" ]; then
   pandoc \
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
-    --defaults=latex.yaml
+    --defaults=latex.yaml \
+	  --resource-path=${RESOURCE_PATH}     
 fi
 
 # Spellcheck
