@@ -8,6 +8,7 @@ dependencies:
   - jinja2=3.0.3
   - jsonschema=4.2.1
   - pandoc=2.16.2
+  - pandoc-crossref==0.3.12.1  
   - pango=1.48.10
   - pip=21.3.1
   - python=3.10.0
@@ -35,3 +36,7 @@ dependencies:
     - pysha3==1.0.2
     - python-bitcoinlib==0.10.2
     - pyyaml==5.4.1
+
+# apt:
+#  - sudo apt install texlive-latex-base
+#  - sudo apt install texlive-latex-extra
