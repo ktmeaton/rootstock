@@ -25,6 +25,8 @@ MANUBOT_USE_DOCKER="${MANUBOT_USE_DOCKER:-$DOCKER_RUNNING}"
 # Pandoc's configuration is specified via files of option defaults
 # located in the $PANDOC_DATA_DIR/defaults directory.
 PANDOC_DATA_DIR="${PANDOC_DATA_DIR:-build/pandoc}"
+LUA="${LUA:-''}"
+XNOS="${XNOS:-''}"
 
 RESOURCE_PATH=".:content"
 
@@ -41,10 +43,18 @@ manubot process \
   --skip-citations \
   --log-level=INFO
 
+# Manually manipulate the metadata
+metadata_end=`grep -n "\.\.\." output/manuscript.md | head -n 1 | cut -d ":" -f 1`
+metadata_end=`expr $metadata_end + 1`
+
 # Make output directory
 mkdir -p output
 
-ls -l content
+# Metadata
+echo "---" > output/manuscript.md.tmp
+cat content/metadata.yaml >> output/manuscript.md.tmp
+echo "..." >> output/manuscript.md.tmp
+tail -n+$metadata_end output/manuscript.md >> output/manuscript.md.tmp
 
 # Create HTML output
 # https://pandoc.org/MANUAL.html
@@ -52,12 +62,11 @@ echo >&2 "Exporting HTML manuscript"
 pandoc \
   --verbose \
   --data-dir="$PANDOC_DATA_DIR" \
-  --lua-filter ${LUA_DIR}/include-files/include-files.lua \
-  --lua-filter ${LUA_DIR}/short-captions/short-captions.lua \
-  --lua-filter ${LUA_DIR}/table-short-captions/table-short-captions.lua \
+  ${LUA} \
   --defaults=common.yaml \
   --defaults=html.yaml \
 	--resource-path=${RESOURCE_PATH} \
+  ${XNOS}
 
 # Create PDF output (unless BUILD_PDF environment variable equals "false")
 # If Docker is not available, use WeasyPrint to create PDF
@@ -67,6 +76,7 @@ if [ "${BUILD_PDF}" != "false" ] && [ "${MANUBOT_USE_DOCKER}" != "true" ]; then
   ln -s content/images
   pandoc \
     --data-dir="$PANDOC_DATA_DIR" \
+    ${LUA_FILTERS[@]} \
     --defaults=common.yaml \
     --defaults=html.yaml \
     --defaults=pdf-weasyprint.yaml \

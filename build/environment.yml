@@ -28,6 +28,7 @@ dependencies:
     - pandoc-eqnos==2.5.0
     - pandoc-fignos==2.4.0
     - pandoc-tablenos==2.3.0
+    - pandoc-secnos  
     - pandoc-xnos==2.5.0
     - pandocfilters==1.5.0
     - panflute==2.1.0
@@ -36,3 +37,8 @@ dependencies:
     - pysha3==1.0.2
     - python-bitcoinlib==0.10.2
     - pyyaml==5.4.1
+
+# apt:
+# - sudo apt install texlive
+# - sudo apt install texlive-latex-recommended
+# - sudo apt install texlive-latex-extra

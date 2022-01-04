@@ -3,14 +3,13 @@ from: markdown
 input-file: output/manuscript.md
 resource-path: ['.','content']
 filters:
-- pandoc-fignos
-- pandoc-eqnos
-- pandoc-tablenos
-- pandoc-manubot-cite
-- citeproc
+  - pandoc-xnos
+  - pandoc-manubot-cite
+  - citeproc
 wrap: preserve
 metadata:
   csl: build/assets/style.csl
   link-citations: true
 self-contained: true
 standalone: true
+number-sections: true
