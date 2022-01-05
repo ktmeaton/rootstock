@@ -65,6 +65,7 @@ pandoc \
   ${LUA} \
   --defaults=common.yaml \
   --defaults=html.yaml \
+  --defaults=content/custom.yaml \
 	--resource-path=${RESOURCE_PATH} \
   ${XNOS}
 
@@ -80,7 +81,9 @@ if [ "${BUILD_PDF}" != "false" ] && [ "${MANUBOT_USE_DOCKER}" != "true" ]; then
     --defaults=common.yaml \
     --defaults=html.yaml \
     --defaults=pdf-weasyprint.yaml \
-	  --resource-path=${RESOURCE_PATH}    
+    --defaults=content/custom.yaml \
+	  --resource-path=${RESOURCE_PATH} \
+    ${XNOS}   
   rm images
 fi
 
@@ -115,7 +118,9 @@ if [ "${BUILD_DOCX}" = "true" ]; then
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
     --defaults=docx.yaml \
-	  --resource-path=${RESOURCE_PATH}     
+    --defaults=content/custom.yaml \
+	  --resource-path=${RESOURCE_PATH} \
+    ${XNOS}    
 fi
 
 # Create LaTeX output (if BUILD_LATEX environment variable equals "true")
@@ -125,7 +130,9 @@ if [ "${BUILD_LATEX}" = "true" ]; then
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
     --defaults=latex.yaml \
-	  --resource-path=${RESOURCE_PATH}     
+    --defaults=content/custom.yaml \    
+	  --resource-path=${RESOURCE_PATH} \
+   ${XNOS}    
 fi
 
 # Spellcheck
