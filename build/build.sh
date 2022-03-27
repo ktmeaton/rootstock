@@ -41,7 +41,7 @@ manubot process \
   --output-directory=output \
   --cache-directory=ci/cache \
   --skip-citations \
-  --log-level=INFO
+  --log-level=ERROR
 
 # Manually manipulate the metadata
 metadata_end=`grep -n "\.\.\." output/manuscript.md | head -n 1 | cut -d ":" -f 1`
@@ -60,7 +60,7 @@ tail -n+$metadata_end output/manuscript.md >> output/manuscript.md.tmp
 # https://pandoc.org/MANUAL.html
 echo >&2 "Exporting HTML manuscript"
 pandoc \
-  --verbose \
+  --quiet \
   --data-dir="$PANDOC_DATA_DIR" \
   ${LUA} \
   --defaults=common.yaml \
@@ -76,6 +76,7 @@ if [ "${BUILD_PDF}" != "false" ] && [ "${MANUBOT_USE_DOCKER}" != "true" ]; then
   if [ -L images ]; then rm images; fi  # if images is a symlink, remove it
   ln -s content/images
   pandoc \
+    --quiet \
     --data-dir="$PANDOC_DATA_DIR" \
     ${LUA_FILTERS[@]} \
     --defaults=common.yaml \
@@ -114,7 +115,8 @@ fi
 # Create DOCX output (if BUILD_DOCX environment variable equals "true")
 if [ "${BUILD_DOCX}" = "true" ]; then
   echo >&2 "Exporting Word Docx manuscript"
-  pandoc --verbose \
+  pandoc \
+    --quiet \
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
     --defaults=docx.yaml \
@@ -127,6 +129,7 @@ fi
 if [ "${BUILD_LATEX}" = "true" ]; then
   echo >&2 "Exporting LaTeX manuscript"
   pandoc \
+    --quiet \
     --data-dir="$PANDOC_DATA_DIR" \
     --defaults=common.yaml \
     --defaults=latex.yaml \

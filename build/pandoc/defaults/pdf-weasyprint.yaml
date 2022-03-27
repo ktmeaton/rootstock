@@ -3,7 +3,8 @@
 output-file: output/manuscript.pdf
 pdf-engine: weasyprint
 pdf-engine-opts:
-- '--presentational-hints'
+  - '--presentational-hints'
+  - '--quiet'
 html-math-method:
   method: webtex
   url: 'https://latex.codecogs.com/svg.latex?'
